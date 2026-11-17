@@ -9,11 +9,13 @@ interface CountUpProps {
   className?: string;
 }
 
-const NUMERIC_PREFIX = /^(\d+)(.*)$/;
+const NUMERIC_PREFIX = /^([+$]?)(\d[\d,]*)(.*)$/;
 
 /**
  * Counts up to the numeric prefix of `value` the first time it scrolls into
- * view (e.g. "250+" ticks 0 -> 250 and keeps the suffix).
+ * view (e.g. "250+" ticks 0 -> 250 and keeps the suffix). Thousands
+ * separators are honored ("9,800" ticks 0 -> 9,800 with commas) and a
+ * leading "+" is preserved ("+185%").
  *
  * Robustness notes:
  * - Parsed parts are memoized and only primitives go into the effect's
@@ -52,16 +54,22 @@ export const CountUp: React.FC<CountUpProps> = ({ value, duration = 1500, classN
 
   const start = inView || rectSeen;
 
-  const { target, suffix, isNumeric } = useMemo(() => {
+  const { target, suffix, prefix, grouped, isNumeric } = useMemo(() => {
     const match = value.match(NUMERIC_PREFIX);
+    if (!match) return { isNumeric: false, target: 0, suffix: '', prefix: '', grouped: false };
+    const digits = match[2];
     return {
-      isNumeric: Boolean(match),
-      target: match ? parseInt(match[1], 10) : 0,
-      suffix: match ? match[2] : '',
+      isNumeric: true,
+      target: parseInt(digits.replace(/,/g, ''), 10),
+      suffix: match[3],
+      prefix: match[1],
+      grouped: digits.includes(','),
     };
   }, [value]);
 
-  const [display, setDisplay] = useState(isNumeric && !reduceMotion ? `0${suffix}` : value);
+  const [display, setDisplay] = useState(isNumeric && !reduceMotion ? `${prefix}0${suffix}` : value);
+
+  const fmt = (n: number) => (grouped ? n.toLocaleString('en-US') : String(n));
 
   useEffect(() => {
     if (!start) return;
@@ -81,7 +89,7 @@ export const CountUp: React.FC<CountUpProps> = ({ value, duration = 1500, classN
       const current = Math.round(target * (1 - Math.pow(1 - progress, 3))); // easeOutCubic
       if (current !== lastShown) {
         lastShown = current;
-        setDisplay(`${current}${suffix}`);
+        setDisplay(`${prefix}${fmt(current)}${suffix}`);
       }
       if (progress >= 1) stop(true);
     };
@@ -89,7 +97,7 @@ export const CountUp: React.FC<CountUpProps> = ({ value, duration = 1500, classN
     const stop = (done = false) => {
       cancelAnimationFrame(raf);
       clearInterval(interval);
-      if (done) setDisplay(`${target}${suffix}`);
+      if (done) setDisplay(`${prefix}${fmt(target)}${suffix}`);
     };
 
     raf = requestAnimationFrame(function loop() {
@@ -100,7 +108,7 @@ export const CountUp: React.FC<CountUpProps> = ({ value, duration = 1500, classN
     interval = window.setInterval(tick, 50);
 
     return () => stop();
-  }, [start, isNumeric, reduceMotion, target, suffix, value, duration]);
+  }, [start, isNumeric, reduceMotion, target, suffix, prefix, grouped, value, duration]);
 
   return (
     <span ref={ref} className={className}>

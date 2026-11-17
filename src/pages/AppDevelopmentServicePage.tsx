@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowRight, HelpCircle, Minus, Plus } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
   AssetMeters,
@@ -181,7 +182,7 @@ const ProblemSection: React.FC = () => (
       </Reveal>
 
       {/* failure cards */}
-      <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {APP_PROBLEM.failures.map((f, i) => (
           <Reveal key={f.code} delay={Math.min(i * 0.06, 0.3)}>
             <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
@@ -601,6 +602,7 @@ export const AppDevelopmentServicePage: React.FC<AppDevelopmentServicePageProps>
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="application-development" />
     <ShiftSection />
     <SystemSection />
     <FrameworkSection />

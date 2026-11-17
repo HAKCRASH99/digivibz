@@ -57,9 +57,30 @@ export const Framework5D: React.FC<Framework5DProps> = ({ onOpenAudit }) => {
           </Reveal>
         </div>
 
-        {/* 5 Step Selector Cards */}
-        <Reveal delay={0.18} className="mt-14">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        {/* 5 Step Selector — compact chips on phones, cards on desktop */}
+        <Reveal delay={0.18} className="mt-8 lg:mt-14">
+          <div className="dz-mobile-rail lg:hidden">
+            {FRAMEWORK_STEPS.map((step) => {
+              const isActive = step.id === activeStepId;
+              return (
+                <button
+                  key={step.id}
+                  onClick={() => setActiveStepId(step.id)}
+                  aria-pressed={isActive}
+                  className={`rail-chip inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12.5px] font-bold transition-colors ${
+                    isActive
+                      ? 'border-[#18181B] bg-[#18181B] text-white'
+                      : 'border-slate-200 bg-white text-slate-700'
+                  }`}
+                >
+                  <span className={isActive ? 'text-red-400' : 'text-slate-400'}>{step.stepNumber}</span>
+                  {step.name}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="hidden grid-cols-5 gap-3.5 lg:grid">
             {FRAMEWORK_STEPS.map((step) => {
               const isActive = step.id === activeStepId;
               return (
@@ -104,8 +125,8 @@ export const Framework5D: React.FC<Framework5DProps> = ({ onOpenAudit }) => {
           <div className="bg-slate-50/70 border border-slate-200 rounded-2xl p-6 sm:p-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
-              {/* Left: Inverted funnel */}
-              <div className="lg:col-span-5 flex flex-col items-center justify-center">
+              {/* Left: Inverted funnel (desktop only — the chips carry the flow on phones) */}
+              <div className="hidden lg:col-span-5 lg:flex flex-col items-center justify-center">
                 <div className="w-full max-w-[340px] relative">
                   <div className="text-center mb-3">
                     <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -148,7 +169,7 @@ export const Framework5D: React.FC<Framework5DProps> = ({ onOpenAudit }) => {
               </div>
 
               {/* Right: Selected step details (animates between steps) */}
-              <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-xs min-h-[420px] sm:min-h-[400px]">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs sm:p-8 lg:col-span-7 lg:min-h-[400px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeStep.id}
@@ -207,7 +228,7 @@ export const Framework5D: React.FC<Framework5DProps> = ({ onOpenAudit }) => {
         </Reveal>
 
         {/* Summary & CTA */}
-        <div className="mt-14 max-w-3xl mx-auto text-center space-y-5">
+        <div className="mx-auto mt-10 max-w-3xl space-y-5 text-center sm:mt-14">
           <Reveal>
             <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
               AI gives us speed and data. Our experts give direction and strategy.<br className="hidden sm:inline" />
@@ -218,7 +239,7 @@ export const Framework5D: React.FC<Framework5DProps> = ({ onOpenAudit }) => {
           <Reveal delay={0.08}>
             <button
               onClick={onOpenAudit}
-              className="dz-btn-shine inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#C61A1A] hover:bg-[#9E1414] text-white font-semibold text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group"
+              className="dz-btn-shine inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#C61A1A] px-6 py-3.5 text-[13.5px] font-semibold leading-snug text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#9E1414] hover:shadow-lg sm:w-auto sm:rounded-lg sm:px-8 sm:text-base cursor-pointer group"
             >
               <span>Build My AI-Powered 5D Growth System</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

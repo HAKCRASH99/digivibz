@@ -18,6 +18,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CountUp } from '../components/CountUp';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import { CaseVisual, FirstSearch, RecordStage, ReputationRadar, StatStrip } from '../components/orm/OrmVisuals';
@@ -209,7 +210,7 @@ const ProblemSection: React.FC = () => (
             {ORM_PROBLEM.askLabel}
           </p>
         </Reveal>
-        <div className="mt-4 grid sm:grid-cols-2 gap-4">
+        <div className="dz-mobile-rail mt-4 grid sm:grid-cols-2 gap-4">
           {ORM_PROBLEM.scenarios.map((s, i) => (
             <Reveal key={s.title} delay={Math.min(i * 0.07, 0.3)}>
               <div className="h-full rounded-2xl border border-slate-200 bg-slate-50/60 p-5 transition-all hover:border-red-300 hover:bg-white hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
@@ -271,7 +272,7 @@ const WhySection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {ORM_WHY.features.map((f, i) => {
           const Icon = WHY_ICONS[i];
           return (
@@ -324,7 +325,7 @@ const ServicesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {ORM_SERVICES.items.map((item, i) => {
           const Icon = SERVICE_ICONS[i];
           return (
@@ -424,7 +425,7 @@ const ResultsSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid lg:grid-cols-3 gap-5">
+      <div className="dz-mobile-rail mt-12 grid lg:grid-cols-3 gap-5">
         {ORM_RESULTS.cases.map((c, i) => (
           <Reveal key={c.label} delay={0.08 * i}>
             <div className="h-full flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all hover:border-red-300 hover:shadow-[0_28px_60px_-42px_rgba(198,26,26,0.55)]">
@@ -621,6 +622,7 @@ export const OrmServicePage: React.FC<OrmServicePageProps> = ({ onOpenAudit }) =
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="online-reputation-management" />
     <WhySection />
     <ServicesSection />
     <FrameworkSection />

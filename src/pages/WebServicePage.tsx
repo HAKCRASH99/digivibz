@@ -21,6 +21,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
   CodeToSite,
@@ -344,7 +345,7 @@ const SolutionsSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {WEB_SOLUTIONS.items.map((item, i) => {
           const Icon = SOLUTION_ICONS[i];
           return (
@@ -673,6 +674,7 @@ export const WebServicePage: React.FC<WebServicePageProps> = ({ onOpenAudit }) =
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="web-development" />
     <WhySection />
     <SolutionsSection />
     <TechSection />

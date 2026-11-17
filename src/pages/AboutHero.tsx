@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import { CountUp } from '../components/CountUp';
+import { WordReveal } from '../components/fx/FxKit';
 
 interface AboutHeroProps {
   onOpenAudit: () => void;
@@ -99,13 +100,13 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenAudit }) => {
               About Us
             </motion.div>
 
-            <motion.h1
-              {...rise(0.12)}
+            <WordReveal
+              as="h1"
+              text="AI-Powered Digital Marketing Agency Built to Grow US Businesses"
+              highlight="Agency Built to Grow US Businesses"
+              delay={0.12}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-extrabold text-slate-900 tracking-tight leading-[1.14]"
-            >
-              AI-Powered Digital Marketing{' '}
-              <span className="text-[#C61A1A]">Agency Built to Grow US Businesses</span>
-            </motion.h1>
+            />
 
             <motion.p {...rise(0.24)} className="text-lg sm:text-xl font-semibold text-slate-700">
               Smarter campaigns. Faster growth. Measurable revenue.

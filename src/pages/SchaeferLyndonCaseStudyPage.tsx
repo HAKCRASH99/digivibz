@@ -10,12 +10,16 @@ import {
   XCircle,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { CountUp } from '../components/CountUp';
+import { MetricsTicker } from '../components/MetricsTicker';
+import { Parallax } from '../components/Parallax';
 import {
   SCHAEFER,
   SCHAEFER_CHALLENGE,
   SCHAEFER_CTA,
   SCHAEFER_FRAMEWORK_HEADING,
   SCHAEFER_IMAGE,
+  SCHAEFER_INDEX_RESULTS,
   SCHAEFER_OVERVIEW,
   SCHAEFER_PHASES,
   SCHAEFER_RESULTS,
@@ -85,6 +89,18 @@ export const SchaeferLyndonCaseStudyPage: React.FC<SchaeferLyndonCaseStudyPagePr
       =================================================================== */}
       <section id="schaefer-hero" className="relative bg-white overflow-hidden">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={slats(0.16)} />
+        {/* Slow drifting brand glow — sits above the white bg (negative z would
+            hide it behind the section background) and below the content. */}
+        {!reduceMotion && (
+          <div
+            aria-hidden="true"
+            className="absolute -top-28 left-1/2 -ml-[300px] w-[600px] h-[380px] rounded-full pointer-events-none blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, rgba(198,26,26,0.13) 0%, transparent 70%)',
+              animation: 'dz-drift 16s ease-in-out infinite',
+            }}
+          />
+        )}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 md:pt-10 md:pb-16">
           <motion.a
             {...rise(0)}
@@ -157,28 +173,35 @@ export const SchaeferLyndonCaseStudyPage: React.FC<SchaeferLyndonCaseStudyPagePr
             </motion.div>
           </div>
 
-          {/* client visual — full-width board */}
+          {/* client visual — full-width board (scroll parallax on the board) */}
           <motion.figure
             initial={reduceMotion ? false : { opacity: 0, y: 26, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="mt-9 max-w-4xl mx-auto"
           >
-            <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.45)]">
-              <img
-                src={SCHAEFER_IMAGE}
-                alt="Schaefer Lyndon self-storage website shown on a laptop and phone beside stacked moving boxes"
-                referrerPolicy="no-referrer"
-                className="w-full h-auto block"
-              />
-              <figcaption className="absolute left-3 bottom-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-[10px] font-extrabold uppercase tracking-widest text-slate-700 shadow-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C61A1A]" />
-                {SCHAEFER.meta.industry}
-              </figcaption>
-            </div>
+            <Parallax distance={22}>
+              <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.45)]">
+                <img
+                  src={SCHAEFER_IMAGE}
+                  alt="Schaefer Lyndon self-storage website shown on a laptop and phone beside stacked moving boxes"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-auto block"
+                />
+                <figcaption className="absolute left-3 bottom-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-[10px] font-extrabold uppercase tracking-widest text-slate-700 shadow-xs dz-float">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C61A1A]" />
+                  {SCHAEFER.meta.industry}
+                </figcaption>
+              </div>
+            </Parallax>
           </motion.figure>
         </div>
       </section>
+
+      {/* Kinetic metric band — client numbers on brand red */}
+      <MetricsTicker
+        items={SCHAEFER_INDEX_RESULTS.map((r) => `${r.value} ${r.label}`)}
+      />
 
       {/* ==================================================================
           2. PROJECT OVERVIEW — manifest lead paragraph
@@ -302,6 +325,22 @@ export const SchaeferLyndonCaseStudyPage: React.FC<SchaeferLyndonCaseStudyPagePr
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ManifestHeading code="04">{SCHAEFER_RESULTS_HEADING}</ManifestHeading>
 
+          {/* headline numbers — tick up once scrolled into view */}
+          <div className="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {SCHAEFER_INDEX_RESULTS.slice(0, 4).map((s, i) => (
+              <Reveal key={s.label} delay={Math.min(i * 0.06, 0.2)}>
+                <div className="group h-full rounded-xl border border-slate-200 bg-white px-4 py-4 text-center transition-all duration-300 hover:border-[#C61A1A]/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-100/60">
+                  <div className="text-xl sm:text-2xl font-extrabold text-[#C61A1A] tabular-nums leading-none">
+                    <CountUp value={s.value} duration={900} />
+                  </div>
+                  <div className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500 leading-snug">
+                    {s.label}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
           <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {SCHAEFER_RESULTS.map((r, i) => {
               const Icon = r.icon;
@@ -311,7 +350,7 @@ export const SchaeferLyndonCaseStudyPage: React.FC<SchaeferLyndonCaseStudyPagePr
                   delay={Math.min(i * 0.05, 0.2)}
                   className={i === SCHAEFER_RESULTS.length - 1 ? 'sm:col-span-2' : undefined}
                 >
-                  <div className="group relative h-full rounded-2xl border border-slate-200 bg-white p-5 overflow-hidden hover:border-red-300 hover:bg-red-50/30 transition-colors">
+                  <div className="group relative h-full rounded-2xl border border-slate-200 bg-white p-5 overflow-hidden hover:border-red-300 hover:bg-red-50/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/70 transition-all duration-300">
                     <span className="absolute top-0 left-0 right-0 h-1 bg-[#C61A1A]/80" />
                     <div className="flex items-start justify-between gap-3">
                       <span className="flex w-10 h-10 shrink-0 items-center justify-center rounded-lg bg-red-50 text-[#C61A1A] group-hover:bg-[#C61A1A] group-hover:text-white transition-colors">

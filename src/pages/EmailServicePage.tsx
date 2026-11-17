@@ -7,6 +7,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CountUp } from '../components/CountUp';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
@@ -322,7 +323,7 @@ const ServicesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {EM_SERVICES.items.map((item, i) => (
           <Reveal key={item.title} delay={Math.min(i * 0.04, 0.3)}>
             <div className="group h-full rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
@@ -646,6 +647,7 @@ export const EmailServicePage: React.FC<EmailServicePageProps> = ({ onOpenAudit 
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="email-marketing" />
     <WhySection />
     <ServicesSection />
     <PlatformsSection />

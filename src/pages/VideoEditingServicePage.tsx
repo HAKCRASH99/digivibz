@@ -7,6 +7,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
   DropOffPlayer,
@@ -306,7 +307,7 @@ const ServicesSection: React.FC = () => (
                 </div>
               </Reveal>
 
-              <div className="mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="dz-mobile-rail mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {group.items.map((item, i) => (
                   <Reveal key={item.title} delay={Math.min(i * 0.04, 0.24)}>
                     <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
@@ -362,7 +363,7 @@ const ToolsSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {VE_TOOLS.groups.map((group, i) => {
           const Icon = TOOL_ICONS[i];
           return (
@@ -475,7 +476,7 @@ const WhySection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 gap-4">
         {VE_WHY.items.map((item, i) => {
           const Icon = WHY_ICONS[i];
           return (
@@ -659,6 +660,7 @@ export const VideoEditingServicePage: React.FC<VideoEditingServicePageProps> = (
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="video-editing" />
     <PitchSection onOpenAudit={onOpenAudit} />
     <ServicesSection />
     <ToolsSection />

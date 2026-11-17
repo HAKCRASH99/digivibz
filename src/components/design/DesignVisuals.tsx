@@ -609,7 +609,7 @@ export const ToolGrid: React.FC = () => {
   const reduce = useReducedMotion();
 
   return (
-    <div className="grid sm:grid-cols-2 gap-4">
+    <div className="dz-mobile-rail grid sm:grid-cols-2 gap-4">
       {GD_TOOLS.items.map((t, i) => (
         <motion.div
           key={t.name}

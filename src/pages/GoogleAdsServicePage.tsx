@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowRight, HelpCircle, Minus, Plus } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
   AdTicker,
@@ -346,7 +347,7 @@ const ServicesSection: React.FC = () => (
                   </Reveal>
                 )}
 
-                <div className="mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="dz-mobile-rail mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {group.items.map((item, i) => (
                     <Reveal key={item.title} delay={Math.min(i * 0.04, 0.24)}>
                       <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
@@ -706,6 +707,7 @@ export const GoogleAdsServicePage: React.FC<GoogleAdsServicePageProps> = ({ onOp
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="google-ads-agency" />
     <PitchSection />
     <ServicesSection />
     <ProcessSection />

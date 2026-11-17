@@ -569,17 +569,17 @@ export const GrowthSystem5D: React.FC<GrowthSystem5DProps> = ({ onOpenAudit, onS
           </svg>
         </div>
 
-        {/* Mobile stage cards: fully readable with generous touch targets */}
+        {/* Mobile stage cards: one swipeable row instead of a five-card stack */}
+        <div className="w-full pt-1 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+          The AI-Powered 5D Growth Framework
+        </div>
         <motion.div
-          className="w-full space-y-2.5 px-2"
+          className="dz-mobile-rail w-[calc(100%+2rem)] pb-1"
           initial={reduceMotion ? false : 'hidden'}
           whileInView="show"
           viewport={{ once: true, amount: 0.1 }}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
         >
-          <div className="text-center text-xs font-semibold text-slate-500 uppercase tracking-wider pb-1">
-            The AI-Powered 5D Growth Framework
-          </div>
           {SEGMENTS.map((seg) => (
             <motion.div
               key={seg.id}
@@ -588,20 +588,20 @@ export const GrowthSystem5D: React.FC<GrowthSystem5DProps> = ({ onOpenAudit, onS
                 show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
               }}
               onClick={onScrollToFramework}
-              className="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-md transition-all active:scale-[0.98] cursor-pointer shadow-2xs"
+              className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-2xs transition-all hover:border-slate-300 hover:shadow-md active:scale-[0.98] cursor-pointer"
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
-                  <span className="font-bold text-base" style={{ color: seg.color }}>
+                  <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: seg.color }} />
+                  <span className="text-[15px] font-bold" style={{ color: seg.color }}>
                     {seg.name}
                   </span>
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
                   Learn more →
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 leading-snug pl-5">
+              <p className="mt-1 pl-5 text-[12.5px] leading-snug text-slate-600">
                 {seg.label.lines.join(' ')}
               </p>
             </motion.div>

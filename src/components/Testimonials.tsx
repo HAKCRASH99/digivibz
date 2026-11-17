@@ -33,7 +33,16 @@ export const Testimonials: React.FC = () => {
           </Reveal>
         </div>
 
-        <div className="mt-14 overflow-hidden">
+        <motion.div
+          className="mt-10 overflow-hidden sm:mt-14"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.14}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -48) go(1);
+            else if (info.offset.x > 48) go(-1);
+          }}
+        >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={startIndex}
@@ -41,12 +50,12 @@ export const Testimonials: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: direction * -48 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4"
             >
-              {visibleTestimonials.map((t) => (
+              {visibleTestimonials.map((t, idx) => (
                 <div
                   key={t.id}
-                  className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                  className={`${idx > 0 ? 'hidden md:flex' : 'flex'} flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md sm:p-6`}
                 >
                   <div>
                     <div className="flex items-center gap-1 mb-4 text-[#C61A1A]">
@@ -84,19 +93,25 @@ export const Testimonials: React.FC = () => {
               ))}
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* Controls + dots */}
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="mt-6 flex items-center justify-center gap-4 sm:mt-8">
           <button
             onClick={() => go(-1)}
-            className="w-9 h-9 rounded-full bg-black text-white hover:bg-[#27272A] hover:scale-105 flex items-center justify-center transition-all cursor-pointer shadow-xs"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-xs transition-all hover:scale-105 hover:bg-[#27272A] active:scale-95 cursor-pointer sm:h-9 sm:w-9"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="h-4 w-4" />
           </button>
 
-          <div className="flex items-center gap-2">
+          <span className="min-w-[64px] text-center font-mono text-[12px] font-bold tabular-nums text-slate-500 sm:hidden">
+            <span className="text-[#C61A1A]">{String(startIndex + 1).padStart(2, '0')}</span>
+            <span className="mx-0.5 text-slate-300">/</span>
+            {String(TESTIMONIALS.length).padStart(2, '0')}
+          </span>
+
+          <div className="hidden items-center gap-2 sm:flex">
             {TESTIMONIALS.map((t, i) => (
               <button
                 key={t.id}
@@ -114,10 +129,10 @@ export const Testimonials: React.FC = () => {
 
           <button
             onClick={() => go(1)}
-            className="w-9 h-9 rounded-full bg-black text-white hover:bg-[#27272A] hover:scale-105 flex items-center justify-center transition-all cursor-pointer shadow-xs"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-xs transition-all hover:scale-105 hover:bg-[#27272A] active:scale-95 cursor-pointer sm:h-9 sm:w-9"
             aria-label="Next testimonial"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 

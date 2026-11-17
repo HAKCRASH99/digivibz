@@ -102,6 +102,7 @@ const clampPos = (v: number) => Math.min(96, Math.max(4, v));
 
 export const AgencyComparison: React.FC<AgencyComparisonProps> = ({ onOpenAudit }) => {
   const [pos, setPos] = useState(50);
+  const [mobileTone, setMobileTone] = useState<'traditional' | 'digivibz'>('traditional');
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
 
@@ -193,112 +194,149 @@ export const AgencyComparison: React.FC<AgencyComparisonProps> = ({ onOpenAudit 
           </Reveal>
         </div>
 
-        {/* ---------------- Mobile / tablet: stacked cards ---------------- */}
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch lg:hidden">
+        {/* ---------------- Mobile / tablet: one side at a time ---------------- */}
+        <div className="mt-9 lg:hidden">
 
-          {/* Traditional */}
-          <Reveal>
-            <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-4 h-full hover:shadow-md transition-shadow">
-              <div className="border-b border-slate-100 pb-4">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-                  The Legacy Model
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mt-1">
+          {/* Tone switch — mirrors the draggable split on desktop */}
+          <div
+            role="tablist"
+            aria-label="Compare the traditional agency model with the DIGIVIBZ growth system"
+            className="flex gap-1 rounded-full border border-slate-200 bg-white p-1 shadow-2xs"
+          >
+            {([
+              { id: 'traditional', label: 'Traditional agency' },
+              { id: 'digivibz', label: 'DIGIVIBZ system' },
+            ] as const).map((tab) => {
+              const active = mobileTone === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setMobileTone(tab.id)}
+                  className={`relative flex min-h-11 flex-1 items-center justify-center rounded-full px-3 py-2 text-[12.5px] font-bold transition-colors ${
+                    active ? 'text-white' : 'text-slate-500'
+                  }`}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="agency-tab-pill"
+                      className={`absolute inset-0 rounded-full ${
+                        tab.id === 'traditional' ? 'bg-slate-900' : 'bg-[#C61A1A]'
+                      }`}
+                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Selected side */}
+          <motion.div
+            key={mobileTone}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4"
+          >
+            {mobileTone === 'traditional' ? (
+              <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+                <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                    The Legacy Model
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-slate-500">
+                    Old way
+                  </span>
+                </div>
+                <h3 className="mt-3 text-[17px] font-bold leading-snug text-slate-900">
                   Traditional Agency Approach
                 </h3>
-              </div>
-              <div className="space-y-3.5">
-                {TRADITIONAL_VS_DIGIVIBZ.traditional.map((point, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600">
-                    <span className="p-0.5 rounded-full bg-slate-100 text-slate-400 mt-0.5 shrink-0">
-                      <X className="w-3.5 h-3.5" />
-                    </span>
-                    <span>{point}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Center: hourglass + stat */}
-          <Reveal delay={0.1}>
-            <div className="flex flex-col items-center justify-center p-4 h-full">
-              <div className="relative w-full max-w-[280px] flex flex-col items-center text-center">
-
-                <div className="mb-4 bg-white p-4 rounded-xl border border-red-100 shadow-md dz-glow-pulse rounded-xl">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#C61A1A] uppercase tracking-wider mb-1">
-                    <TrendingUp className="w-3.5 h-3.5" /> Proven Multiplier
-                  </div>
-                  <div className="text-4xl font-extrabold text-[#C61A1A] tracking-tight">
-                    <CountUp value="4X" />
-                  </div>
-                  <p className="text-xs text-slate-600 font-medium mt-1">
-                    average revenue growth across our client engagements
-                  </p>
+                <div className="mt-4 space-y-3">
+                  {TRADITIONAL_VS_DIGIVIBZ.traditional.map((point, i) => (
+                    <div key={i} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-slate-600">
+                      <span className="mt-0.5 shrink-0 rounded-full bg-slate-100 p-0.5 text-slate-400">
+                        <X className="h-3.5 w-3.5" />
+                      </span>
+                      <span>{point}</span>
+                    </div>
+                  ))}
                 </div>
-
-                <svg viewBox="0 0 200 240" className="w-44 h-auto drop-shadow-sm select-none overflow-visible">
-                  <defs>
-                    <linearGradient id="hourGradTop" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#F1F5F9" />
-                      <stop offset="100%" stopColor="#E2E8F0" />
-                    </linearGradient>
-                    <linearGradient id="hourGradBottom" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#FEE2E2" />
-                      <stop offset="100%" stopColor="#FECACA" />
-                    </linearGradient>
-                  </defs>
-
-                  <path d="M20 20 L180 20 L115 110 L85 110 Z" fill="url(#hourGradTop)" stroke="#E2E8F0" strokeWidth="2" />
-                  <path d="M85 130 L115 130 L180 220 L20 220 Z" fill="url(#hourGradBottom)" stroke="#E2E8F0" strokeWidth="2" />
-                  <line x1="100" y1="110" x2="100" y2="130" stroke="#C61A1A" strokeWidth="4" strokeDasharray="3 3" />
-
-                  {/* Animated grains streaming through the neck */}
-                  <circle cx="100" cy="112" r="3" fill="#C61A1A" style={{ animation: 'dz-drop 1.8s linear infinite' }} />
-                  <circle cx="100" cy="112" r="2.5" fill="#C61A1A" style={{ animation: 'dz-drop 1.8s linear infinite', animationDelay: '0.6s' }} />
-                  <circle cx="100" cy="112" r="2" fill="#C61A1A" style={{ animation: 'dz-drop 1.8s linear infinite', animationDelay: '1.2s' }} />
-                </svg>
-
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mt-2">
-                  Predictable Flow Architecture
-                </span>
               </div>
-            </div>
-          </Reveal>
-
-          {/* DIGIVIBZ */}
-          <Reveal delay={0.15}>
-            <div className="bg-white p-6 sm:p-7 rounded-2xl border-2 border-red-500/20 shadow-md space-y-4 relative overflow-hidden h-full hover:shadow-lg transition-shadow">
-              <div className="absolute top-0 right-0 bg-[#C61A1A] text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">
-                AI-Powered
-              </div>
-              <div className="border-b border-slate-100 pb-4">
-                <span className="text-xs font-bold text-[#C61A1A] uppercase tracking-wider block">
-                  The Modern Solution
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mt-1">
+            ) : (
+              <div className="relative overflow-hidden rounded-2xl border-2 border-red-500/20 bg-white p-5 shadow-md">
+                <div className="absolute right-0 top-0 rounded-bl-lg bg-[#C61A1A] px-3 py-1 text-[9.5px] font-bold uppercase tracking-wider text-white">
+                  AI-Powered
+                </div>
+                <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#C61A1A]">
+                    The Modern Solution
+                  </span>
+                </div>
+                <h3 className="mt-3 pr-16 text-[17px] font-bold leading-snug text-slate-900">
                   The DIGIVIBZ Growth System
                 </h3>
+                <div className="mt-4 space-y-3">
+                  {TRADITIONAL_VS_DIGIVIBZ.digivibz.map((point, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.04 + i * 0.05, duration: 0.3 }}
+                      className="flex items-start gap-2.5 text-[13px] font-medium leading-relaxed text-slate-800"
+                    >
+                      <span className="mt-0.5 shrink-0 rounded-full bg-red-100 p-0.5 text-[#C61A1A]">
+                        <Check className="h-3.5 w-3.5" />
+                      </span>
+                      <span>{point}</span>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-3.5">
-                {TRADITIONAL_VS_DIGIVIBZ.digivibz.map((point, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
-                    className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-800 font-medium"
-                  >
-                    <span className="p-0.5 rounded-full bg-red-100 text-[#C61A1A] mt-0.5 shrink-0">
-                      <Check className="w-3.5 h-3.5" />
-                    </span>
-                    <span>{point}</span>
-                  </motion.div>
-                ))}
+            )}
+          </motion.div>
+
+          {/* Proof: 4X multiplier + flow hourglass */}
+          <div className="mt-5 flex flex-col items-center text-center">
+            <div className="w-full max-w-[260px] rounded-xl border border-red-100 bg-white p-4 shadow-md dz-glow-pulse">
+              <div className="mb-1 inline-flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-[#C61A1A]">
+                <TrendingUp className="h-3.5 w-3.5" /> Proven Multiplier
               </div>
+              <div className="text-4xl font-extrabold tracking-tight text-[#C61A1A]">
+                <CountUp value="4X" />
+              </div>
+              <p className="mt-1 text-[11.5px] font-medium leading-snug text-slate-600">
+                average revenue growth across our client engagements
+              </p>
             </div>
-          </Reveal>
+
+            <svg viewBox="0 0 200 240" className="mt-4 h-auto w-32 select-none overflow-visible drop-shadow-sm" aria-hidden="true">
+              <defs>
+                <linearGradient id="hourGradTopM" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#F1F5F9" />
+                  <stop offset="100%" stopColor="#E2E8F0" />
+                </linearGradient>
+                <linearGradient id="hourGradBottomM" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#FEE2E2" />
+                  <stop offset="100%" stopColor="#FECACA" />
+                </linearGradient>
+              </defs>
+
+              <path d="M20 20 L180 20 L115 110 L85 110 Z" fill="url(#hourGradTopM)" stroke="#E2E8F0" strokeWidth="2" />
+              <path d="M85 130 L115 130 L180 220 L20 220 Z" fill="url(#hourGradBottomM)" stroke="#E2E8F0" strokeWidth="2" />
+              <line x1="100" y1="110" x2="100" y2="130" stroke="#C61A1A" strokeWidth="4" strokeDasharray="3 3" />
+
+              <circle cx="100" cy="112" r="3" fill="#C61A1A" style={{ animation: 'dz-drop 1.8s linear infinite' }} />
+              <circle cx="100" cy="112" r="2.5" fill="#C61A1A" style={{ animation: 'dz-drop 1.8s linear infinite', animationDelay: '0.6s' }} />
+              <circle cx="100" cy="112" r="2" fill="#C61A1A" style={{ animation: 'dz-drop 1.8s linear infinite', animationDelay: '1.2s' }} />
+            </svg>
+
+            <span className="mt-1 text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              Predictable Flow Architecture
+            </span>
+          </div>
         </div>
 
         {/* ------------ Desktop: draggable seeker-bar comparison ------------ */}

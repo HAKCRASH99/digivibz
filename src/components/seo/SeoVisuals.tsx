@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'motion/react';
 import {
   Search,
   Compass,

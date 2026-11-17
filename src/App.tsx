@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MotionConfig } from 'motion/react';
+import { MotionConfig, motion } from 'motion/react';
+import { GlobalFx, useVelocitySkew } from './components/fx/FxKit';
+import { Preloader } from './components/Preloader';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustLogos } from './components/TrustLogos';
@@ -117,6 +119,15 @@ export default function App() {
   const [pendingAnchor, setPendingAnchor] = useState<string | null>(null);
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
+  const skewY = useVelocitySkew();
+  /** Cinematic intro plays once per browser session. */
+  const [introDone, setIntroDone] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('dz-intro-played') === '1';
+    } catch {
+      return false;
+    }
+  });
 
   const handleOpenAudit = () => {
     setIsAuditModalOpen(true);
@@ -203,10 +214,35 @@ export default function App() {
         </div>
       ) : (
         <div className="min-h-screen bg-white text-slate-900 selection:bg-[#C61A1A] selection:text-white">
+          {/* Site-wide atmosphere: scroll progress, cursor light, grain */}
+          <GlobalFx />
+
+          {/* Session-once cinematic intro */}
+          {!introDone && (
+            <Preloader
+              onDone={() => {
+                try {
+                  sessionStorage.setItem('dz-intro-played', '1');
+                } catch {
+                  /* storage blocked — replay next load is acceptable */
+                }
+                setIntroDone(true);
+              }}
+            />
+          )}
+
           {/* Top Bar & Navigation */}
           <Navbar onOpenAudit={handleOpenAudit} />
 
           <main>
+            {/* Route-keyed enter transition — every page change glides in */}
+            <motion.div
+              key={loc.path}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{ skewY }}
+            >
             {route === 'about' ? (
               <AboutPage onOpenAudit={handleOpenAudit} />
             ) : route === 'contact' ? (
@@ -340,6 +376,7 @@ export default function App() {
               <AuditContactForm />
             </>
           )}
+            </motion.div>
         </main>
 
         {/* Footer */}

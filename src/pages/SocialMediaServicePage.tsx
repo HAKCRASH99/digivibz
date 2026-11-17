@@ -15,6 +15,7 @@ import {
   Route,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CountUp } from '../components/CountUp';
 import {
   BusyFlatChart,
@@ -70,6 +71,16 @@ const HeroSection: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAudit }) => 
         }}
         aria-hidden="true"
       />
+      {!reduce && (
+        <div
+          aria-hidden="true"
+          className="absolute -top-28 left-1/2 -ml-[300px] w-[600px] h-[380px] rounded-full pointer-events-none blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, rgba(198,26,26,0.13) 0%, transparent 70%)',
+            animation: 'dz-drift 16s ease-in-out infinite',
+          }}
+        />
+      )}
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
@@ -209,7 +220,7 @@ const ProblemSection: React.FC = () => (
       </div>
 
       {/* the noise block */}
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
         {[SMM_PROBLEM.p2, SMM_PROBLEM.p3, SMM_PROBLEM.p4].map((p, i) => (
           <Reveal key={i} delay={i * 0.08}>
             <div className="h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
@@ -234,7 +245,10 @@ const ProblemSection: React.FC = () => (
 /* ------------------------------------------------------------------
    Comparison — 6 v 6 split cards.
 ------------------------------------------------------------------ */
-const ComparisonSection: React.FC = () => (
+const ComparisonSection: React.FC = () => {
+  const [tone, setTone] = useState<'traditional' | 'digivibz'>('traditional');
+
+  return (
   <section className="py-20 bg-slate-50/70 border-y border-slate-100">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <Reveal>
@@ -244,9 +258,43 @@ const ComparisonSection: React.FC = () => (
         </h2>
       </Reveal>
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 items-start">
+      {/* Phones: one side at a time, same content as the desktop split */}
+      <div
+        role="tablist"
+        aria-label="Compare the old social media approach with the DIGIVIBZ system"
+        className="mx-auto mt-7 flex max-w-sm rounded-full border border-slate-200 bg-white p-1 shadow-2xs md:hidden"
+      >
+        {(
+          [
+            ['traditional', 'The old way'],
+            ['digivibz', 'The DIGIVIBZ way'],
+          ] as const
+        ).map(([key, label]) => {
+          const active = tone === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setTone(key)}
+              className={`flex min-h-11 flex-1 items-center justify-center rounded-full px-2 py-2 text-[11.5px] font-extrabold transition-colors ${
+                active
+                  ? key === 'digivibz'
+                    ? 'bg-[#C61A1A] text-white'
+                    : 'bg-slate-900 text-white'
+                  : 'text-slate-500'
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 md:mt-10 md:grid-cols-2 gap-5 lg:gap-6 items-start">
         {/* traditional */}
-        <Reveal direction="left">
+        <Reveal direction="left" className={tone === 'traditional' ? '' : 'hidden md:block'}>
           <div className="h-full rounded-3xl border border-slate-200 bg-white p-5 sm:p-7">
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[11px] font-extrabold uppercase tracking-widest">
               {SMM_COMPARE.traditional.label}
@@ -275,7 +323,7 @@ const ComparisonSection: React.FC = () => (
         </Reveal>
 
         {/* digivibz */}
-        <Reveal direction="right">
+        <Reveal direction="right" className={tone === 'digivibz' ? '' : 'hidden md:block'}>
           <div className="relative h-full rounded-3xl border border-[#C61A1A] bg-[#18181B] p-5 sm:p-7 overflow-hidden shadow-[0_34px_70px_-40px_rgba(198,26,26,0.6)]">
             <span
               className="absolute top-0 right-0 w-44 h-44 bg-[radial-gradient(circle_at_top_right,rgba(198,26,26,0.35),transparent_70%)] pointer-events-none"
@@ -315,7 +363,8 @@ const ComparisonSection: React.FC = () => (
       </Reveal>
     </div>
   </section>
-);
+  );
+};
 
 /* ------------------------------------------------------------------
    Strategy + stats band.
@@ -864,6 +913,7 @@ export const SocialMediaServicePage: React.FC<SocialMediaServicePageProps> = ({ 
         </div>
       </section>
 
+      <VersusSection slug="social-media-marketing" />
       <ProcessSection />
       <FaqSection />
       <FinalCtaSection onOpenAudit={onOpenAudit} />

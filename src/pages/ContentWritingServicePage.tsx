@@ -22,6 +22,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
   InkChapters,
@@ -328,7 +329,7 @@ const TypesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {CW_TYPES.items.map((item, i) => {
           const Icon = TYPE_ICONS[i];
           return (
@@ -430,7 +431,7 @@ const ProofSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-3 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-3 gap-4">
         {CW_PROOF.reasons.map((r, i) => {
           const Icon = REASON_ICONS[i];
           return (
@@ -619,6 +620,7 @@ export const ContentWritingServicePage: React.FC<ContentWritingServicePageProps>
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="content-writing" />
     <IndustrySection />
     <TypesSection />
     <FrameworkSection />

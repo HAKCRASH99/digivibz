@@ -34,8 +34,8 @@ export const TrustLogos: React.FC = () => {
         </Reveal>
 
         {/* Infinite logo marquee, pauses on hover */}
-        <Reveal delay={0.15} className="mt-10 dz-marquee">
-          <div className="dz-marquee-track flex w-max items-center gap-10 sm:gap-14 pr-10 sm:pr-14">
+        <Reveal delay={0.15} className="mt-8 dz-marquee sm:mt-10">
+          <div className="dz-marquee-track flex w-max items-center gap-8 pr-8 sm:gap-14 sm:pr-14">
             {marqueeItems.map((logo, index) => (
               <div
                 key={index}
@@ -44,7 +44,7 @@ export const TrustLogos: React.FC = () => {
                 <span className="font-extrabold text-lg sm:text-xl tracking-wider text-slate-800 group-hover:text-slate-900 transition-colors">
                   {logo.name}
                 </span>
-                <span className="text-[10px] tracking-widest text-slate-400 font-semibold uppercase">
+                <span className="text-[10.5px] tracking-widest text-slate-400 font-semibold uppercase">
                   {logo.sub}
                 </span>
               </div>
@@ -53,7 +53,7 @@ export const TrustLogos: React.FC = () => {
         </Reveal>
 
         {/* Transitional bridge note */}
-        <Reveal delay={0.1} className="mt-12 pt-6 border-t border-slate-100">
+        <Reveal delay={0.1} className="mt-9 pt-5 border-t border-slate-100 sm:mt-12 sm:pt-6">
           <p className="text-xs sm:text-sm font-medium text-slate-500 italic max-w-xl mx-auto">
             “But trust alone doesn't grow your business. The problem runs deeper, and most agencies are missing it entirely.”
           </p>

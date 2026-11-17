@@ -31,10 +31,10 @@ export const SolutionsMatrix: React.FC<SolutionsMatrixProps> = ({ onOpenAudit })
     <section id="services" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-10">
 
           {/* Left column */}
-          <Reveal className="lg:col-span-4 space-y-6">
+          <Reveal className="order-1 space-y-6 lg:col-span-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-[#C61A1A] rounded-full text-xs font-semibold uppercase tracking-wider">
               <Layers className="w-3.5 h-3.5" /> Full-Service Capabilities
             </div>
@@ -77,7 +77,7 @@ export const SolutionsMatrix: React.FC<SolutionsMatrixProps> = ({ onOpenAudit })
 
             <a
               href="/services"
-              className="inline-flex items-center gap-2 text-sm font-bold text-slate-800 hover:text-[#C61A1A] transition-colors group pt-1"
+              className="inline-flex min-h-11 items-center gap-2 pt-1 text-sm font-bold text-slate-800 transition-colors hover:text-[#C61A1A] group"
             >
               Browse all 15 services
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -85,7 +85,7 @@ export const SolutionsMatrix: React.FC<SolutionsMatrixProps> = ({ onOpenAudit })
           </Reveal>
 
           {/* Center column: accordion */}
-          <div className="lg:col-span-5 space-y-3">
+          <div className="order-3 space-y-3 lg:order-none lg:col-span-5">
             {SOLUTIONS_SERVICES.map((cat, idx) => {
               const isOpen = openIndex === idx;
               return (
@@ -145,8 +145,8 @@ export const SolutionsMatrix: React.FC<SolutionsMatrixProps> = ({ onOpenAudit })
           </div>
 
           {/* Right column: 3D funnel */}
-          <Reveal direction="right" delay={0.15} className="lg:col-span-3 flex flex-col items-center justify-center pt-4 lg:pt-0">
-            <div className="w-full max-w-[240px] flex flex-col items-center dz-float">
+          <Reveal direction="right" delay={0.15} className="order-2 flex flex-col items-center justify-center pt-1 lg:order-none lg:col-span-3 lg:pt-0">
+            <div className="flex w-full max-w-[176px] flex-col items-center dz-float lg:max-w-[240px]">
               <svg viewBox="0 0 240 340" className="w-full drop-shadow-md select-none">
                 <defs>
                   <linearGradient id="brandGrad1" x1="0" y1="0" x2="0" y2="1">

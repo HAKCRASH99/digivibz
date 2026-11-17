@@ -7,6 +7,7 @@ import {
   MapPin,
   Palette,
   PenLine,
+  Rocket,
   Search,
   SearchCheck,
   Share2,
@@ -211,3 +212,97 @@ export const SERVICES_CTA = {
   title: 'Not Sure Which Services You Need?',
   body: 'Share your website and goals, and we’ll return a free Growth Audit showing which services will move the needle first — and which can wait.',
 } as const;
+
+/* ------------------------------------------------------------------
+   Discipline narrative — the sticky scroll story on /services
+   ------------------------------------------------------------------ */
+
+export interface DisciplineStory {
+  id: ServiceCategoryId;
+  /** Oversized ghost numeral shown in the sticky console. */
+  numeral: string;
+  tagline: string;
+  blurb: string;
+}
+
+export const DISCIPLINE_STORY: DisciplineStory[] = [
+  {
+    id: 'growth',
+    numeral: '01',
+    tagline: 'Demand, engineered.',
+    blurb:
+      'Search, social, and paid media run as one demand engine — every campaign measured against pipeline and revenue, never vanity metrics.',
+  },
+  {
+    id: 'creative',
+    numeral: '02',
+    tagline: 'Content that converts.',
+    blurb:
+      'Copy, design, and video built from the same strategy, so every asset sells the same promise in the customer’s own language.',
+  },
+  {
+    id: 'web',
+    numeral: '03',
+    tagline: 'Experiences built to sell.',
+    blurb:
+      'Websites and apps engineered as the conversion layer of the system — fast, persuasive, and wired to capture every lead we generate.',
+  },
+  {
+    id: 'reputation',
+    numeral: '04',
+    tagline: 'Trust, compounding.',
+    blurb:
+      'Reviews, listings, and AI-readiness managed continuously, so the moment a buyer checks you out, the answer is already yes.',
+  },
+];
+
+/* ------------------------------------------------------------------
+   Goal matcher — "start with your outcome" interactive
+   ------------------------------------------------------------------ */
+
+export interface ServiceGoal {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  note: string;
+  /** Recommended service slugs, in suggested order. */
+  slugs: string[];
+}
+
+export const SERVICE_GOALS: ServiceGoal[] = [
+  {
+    id: 'leads',
+    label: 'More qualified leads',
+    icon: Target,
+    note: 'Capture demand that already exists, then turn the website into the closest thing to a salesperson you own.',
+    slugs: ['google-ads-agency', 'seo-services', 'web-development'],
+  },
+  {
+    id: 'local',
+    label: 'Dominate my local market',
+    icon: MapPin,
+    note: 'Own the map pack and the reviews beneath it, so local buyers choose you before they ever call.',
+    slugs: ['google-my-business', 'online-reputation-management', 'seo-services'],
+  },
+  {
+    id: 'brand',
+    label: 'A brand that looks the part',
+    icon: Palette,
+    note: 'One visual and verbal identity across every channel — designed to make trust the default reaction.',
+    slugs: ['graphic-designing', 'social-media-marketing', 'video-editing'],
+  },
+  {
+    id: 'launch',
+    label: 'Launch a site or app',
+    icon: Rocket,
+    note: 'From first wireframe to live product, built around the way your customers actually behave.',
+    slugs: ['web-designing', 'web-development', 'application-development'],
+  },
+  {
+    id: 'ai',
+    label: 'Scale with AI & automation',
+    icon: Bot,
+    note: 'Put the repetitive work on rails and surface in AI answers, so growth stops costing more hours.',
+    slugs: ['ai-automation', 'ai-seo-services', 'content-writing'],
+  },
+];

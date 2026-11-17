@@ -193,6 +193,225 @@ html {
 }
 
 /* ==========================================================================
+   FX kit — pointer physics, spotlight cards, shimmer type
+   ========================================================================== */
+
+/* Magnetic wrapper eases back to rest when the cursor lets go */
+.dz-magnetic-inner {
+  display: inline-block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* 3D tilt card — rotation arrives from JS custom props */
+.dz-tilt {
+  transform: perspective(950px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  will-change: transform;
+}
+.dz-tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(198, 26, 26, 0.09),
+    transparent 62%
+  );
+}
+.dz-tilt:hover .dz-tilt-glare {
+  opacity: 1;
+}
+
+/* Cursor-tracked inner glow for any card that opts in with the class */
+.dz-spot {
+  position: relative;
+}
+.dz-spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(198, 26, 26, 0.08),
+    transparent 65%
+  );
+}
+.dz-spot:hover::after {
+  opacity: 1;
+}
+
+/* Cursor-tracked border beam (masked ring that follows the pointer) */
+.dz-spot-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(198, 26, 26, 0.65),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.dz-spot-ring:hover::before {
+  opacity: 1;
+}
+
+@keyframes dz-pan {
+  to { background-position: -200% center; }
+}
+
+/* Slowly panning brand gradient clipped to text */
+.dz-text-shimmer {
+  background: linear-gradient(100deg, #C61A1A 18%, #ff6b6b 38%, #9E1414 58%, #C61A1A 82%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: dz-pan 5.5s linear infinite;
+}
+
+/* Ghost outline type for oversized section numerals */
+.dz-ghost-num {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(198, 26, 26, 0.22);
+}
+
+/* Slow Ken Burns breathing for cover imagery */
+@keyframes dz-kenburns {
+  0%, 100% { transform: scale(1.02) translate3d(0, 0, 0); }
+  50% { transform: scale(1.09) translate3d(-1.5%, -1%, 0); }
+}
+.dz-kenburns {
+  animation: dz-kenburns 16s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Companion cursor: precise dot + trailing ring that blooms on targets */
+.dz-cursor-ring,
+.dz-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 65;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+.dz-cursor-ring {
+  width: 34px;
+  height: 34px;
+}
+.dz-cursor-ring-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid rgba(198, 26, 26, 0.5);
+  border-radius: 9999px;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.28s ease,
+    border-color 0.28s ease;
+}
+.dz-cursor-hot .dz-cursor-ring-inner {
+  transform: scale(1.45);
+  border-color: rgba(198, 26, 26, 0.85);
+  background-color: rgba(198, 26, 26, 0.07);
+}
+.dz-cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #C61A1A;
+}
+
+/* ==========================================================================
+   Mobile rhythm — phones get a tighter, denser scroll than desktop
+   ========================================================================== */
+@media (max-width: 639px) {
+  /* Desktop-scale section padding reads as one endless scroll on a phone.
+     Trim it so the page keeps its pace and sections stay distinct. */
+  section.py-20,
+  section.py-16 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  section.py-14,
+  section.py-12 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  section.pt-6 {
+    padding-top: 1rem;
+  }
+  /* Long-form copy never needs to shout on a narrow screen. */
+  .dz-balance {
+    text-wrap: balance;
+  }
+
+  /* Turns any card grid into an edge-to-edge, snap-scrolling rail on phones.
+     Keeps every card reachable while cutting a tall wall down to one row. */
+  .dz-mobile-rail {
+    display: flex;
+    gap: 0.75rem;
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .dz-mobile-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .dz-mobile-rail > * {
+    flex: 0 0 86%;
+    min-width: 0;
+    scroll-snap-align: center;
+  }
+  /* Compact chips keep their natural width inside a rail. */
+  .dz-mobile-rail > .rail-chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
+/* Edge-to-edge, snap-scrolling rails used for card strips on phones. */
+.dz-rail {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-inline: 1rem;
+  margin-inline: -1rem;
+}
+.dz-rail::-webkit-scrollbar {
+  display: none;
+}
+.dz-rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+/* ==========================================================================
    Respect reduced-motion preferences across the whole experience
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {

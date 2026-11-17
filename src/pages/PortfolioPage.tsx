@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'motion/react';
 import {
   Activity,
   ArrowRight,
-  ArrowUpRight,
   Check,
   PenTool,
   Rocket,
@@ -12,19 +11,23 @@ import {
   Wrench,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
-import { CountUp } from '../components/CountUp';
+import { VersusSection } from '../components/versus/VersusSection';
+import { WordReveal, TiltCard } from '../components/fx/FxKit';
 import { ProjectMockup } from '../components/ProjectMockup';
-import { CASE_STUDIES } from '../data/content';
+import { WorkDeck } from '../components/portfolio/WorkDeck';
+import { ResultsLedger } from '../components/portfolio/ResultsLedger';
+import { CoverWall } from '../components/portfolio/CoverWall';
+import { WorkVault } from '../components/portfolio/WorkVault';
 import {
   GROWTH_SYSTEM_CLOSER,
   GROWTH_SYSTEM_STEPS,
   PORTFOLIO_CTA,
   PORTFOLIO_INTRO,
   PORTFOLIO_PROJECTS,
-  PORTFOLIO_STATS,
   RESULTS_BOARD,
   WORKING_STYLE_PARAS,
   WORKING_STYLE_PHASES,
+  type PortfolioProject,
 } from '../data/portfolioContent';
 
 /** Step icons for the 5D pipeline. */
@@ -32,6 +35,143 @@ const STEP_ICONS = [Search, PenTool, Wrench, Rocket, Activity] as const;
 
 /** Pipeline node x-positions (viewBox 1000 wide, y = 46). */
 const NODE_X = [80, 280, 480, 680, 880];
+
+/* ------------------------------------------------------------------
+   One selected-work spread — framed like a client file, with the
+   mockup on a pointer-tilt card and a ghost project number behind.
+------------------------------------------------------------------ */
+const ProjectSpread: React.FC<{ project: PortfolioProject; index: number }> = ({ project, index }) => {
+  const flip = index % 2 === 1;
+
+  return (
+    <Reveal delay={0.05}>
+      <div className="group relative">
+        {/* filed paper layers behind the dossier */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-10 -bottom-2.5 top-2.5 rounded-[28px] border border-slate-200/80 bg-white/70 transition-transform duration-500 group-hover:translate-y-1.5"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-5 -bottom-1 top-1 rounded-[28px] border border-slate-200 bg-white transition-transform duration-500 group-hover:translate-y-0.5"
+        />
+
+        <article className="dz-spot dz-spot-ring relative overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_30px_70px_-52px_rgba(15,23,42,0.55)] transition-[border-color,box-shadow,transform] duration-500 group-hover:-translate-y-1 group-hover:border-red-200 group-hover:shadow-[0_40px_90px_-52px_rgba(198,26,26,0.45)]">
+          {/* red rail sweeps across the file on hover */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 z-20 h-0.5 w-0 bg-[#C61A1A] transition-all duration-500 group-hover:w-full"
+          />
+          {/* blueprint grid */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:28px_28px] opacity-70"
+          />
+          {/* ghost index */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-10 right-3 select-none text-[120px] font-extrabold leading-none tracking-tighter text-slate-100 sm:text-[160px]"
+          >
+            {String(index + 1).padStart(2, '0')}
+          </span>
+
+          <div className="relative grid grid-cols-1 items-center gap-8 p-5 sm:p-7 lg:grid-cols-2 lg:gap-12 lg:p-9">
+            {/* mockup */}
+            <div className={flip ? 'lg:order-2' : ''}>
+              <TiltCard max={5} className="rounded-[22px]">
+                <div className="relative rounded-[22px] border border-slate-200 bg-white p-2.5 shadow-[0_30px_70px_-40px_rgba(15,23,42,0.45)] sm:p-3">
+                  <ProjectMockup
+                    variant={project.variant}
+                    metric={project.metric.value}
+                    url={project.variant === 'finance' ? 'atlasfinancial.com' : 'northbridgelegal.com'}
+                    className="transition-transform duration-700 group-hover:scale-[1.015]"
+                  />
+                  <span className="absolute -top-2 right-4 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[8.5px] font-extrabold uppercase tracking-[0.14em] text-slate-600 shadow-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#C61A1A] animate-pulse" />
+                    Live rebuild
+                  </span>
+                </div>
+              </TiltCard>
+
+              <div className="mt-3 flex items-center justify-between px-1">
+                <span className="font-mono text-[8.5px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                  Website · Funnel · Campaigns
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[8.5px] font-bold uppercase tracking-[0.16em] text-[#C61A1A]">
+                  <span className="h-1 w-1 rounded-full bg-[#C61A1A]" />
+                  Rebuilt end-to-end
+                </span>
+              </div>
+            </div>
+
+            {/* copy */}
+            <div className={flip ? 'lg:order-1' : ''}>
+              <div className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                <span className="h-px w-7 bg-[#C61A1A]" />
+                Project {String(index + 1).padStart(2, '0')} / {String(PORTFOLIO_PROJECTS.length).padStart(2, '0')}
+              </div>
+
+              <div className="mt-3 inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                {project.industry}
+              </div>
+
+              <h3 className="mt-3 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
+                {project.name}
+              </h3>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-slate-600 sm:text-[15px]">
+                {project.description}
+              </p>
+
+              <ul className="mt-4 flex flex-wrap gap-1.5">
+                {['Website rebuild', 'Conversion funnel', 'AI-driven campaigns'].map((tag) => (
+                  <li
+                    key={tag}
+                    className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-slate-500"
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <div className="flex items-baseline gap-2.5 rounded-xl bg-red-50 px-3.5 py-2.5 ring-1 ring-red-100">
+                  <span className="text-2xl font-extrabold leading-none tabular-nums text-[#C61A1A]">
+                    {project.metric.value}
+                  </span>
+                  <span className="max-w-[200px] text-[11px] font-semibold leading-tight text-slate-700">
+                    {project.metric.label}
+                  </span>
+                </div>
+
+                <a
+                  href={`/case-study/${project.slug}`}
+                  className="group/link inline-flex min-h-11 items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.14em] text-slate-800 transition-colors hover:text-[#C61A1A]"
+                >
+                  View case study
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 transition-all group-hover/link:rotate-45 group-hover/link:border-[#C61A1A] group-hover/link:bg-[#C61A1A] group-hover/link:text-white">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* file footer */}
+          <div className="relative flex items-center justify-between border-t border-slate-100 bg-slate-50/60 px-5 py-2.5 sm:px-7 lg:px-9">
+            <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              DIGIVIBZ / Case file {String(index + 1).padStart(2, '0')}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.16em] text-[#C61A1A]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#C61A1A]" />
+              Measured
+            </span>
+          </div>
+        </article>
+      </div>
+    </Reveal>
+  );
+};
+
 
 /**
  * Portfolio page (`/portfolio`) — the proof page: results board hero,
@@ -85,13 +225,13 @@ export const PortfolioPage: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAud
                 Portfolio
               </motion.div>
 
-              <motion.h1
-                {...rise(0.12)}
+              <WordReveal
+                as="h1"
+                text="The Work Behind Real Business Growth"
+                highlight="Real Business Growth"
+                delay={0.12}
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-extrabold text-slate-900 tracking-tight leading-[1.14]"
-              >
-                The Work Behind{' '}
-                <span className="text-[#C61A1A]">Real Business Growth</span>
-              </motion.h1>
+              />
 
               <motion.p {...rise(0.24)} className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl">
                 {PORTFOLIO_INTRO}
@@ -123,262 +263,98 @@ export const PortfolioPage: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAud
               </motion.div>
             </div>
 
-            {/* --------------------------------------------- results board */}
+            {/* ------------------------------------------------ work deck */}
             <div className="lg:col-span-7">
               <motion.div
                 initial={reduceMotion ? false : { opacity: 0, y: 26, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-[0_20px_60px_-30px_rgba(15,23,42,0.25)]">
-                  {/* panel header */}
-                  <div className="flex items-center justify-between px-5 sm:px-6 pt-5">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#C61A1A] animate-pulse" />
-                      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
-                        Results Board
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#C61A1A] bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
-                      Last 12 Months
-                    </span>
-                  </div>
+                <WorkDeck />
+              </motion.div>
+            </div>
+          </div>
 
-                  {/* ranked horizontal bars */}
-                  <div className="px-5 sm:px-6 pt-5 pb-4 space-y-3.5">
-                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      <span>Client project</span>
-                      <span>Growth multiple</span>
-                    </div>
-                    {RESULTS_BOARD.map((row, i) => (
-                      <div key={row.label} className="flex items-center gap-3 sm:gap-4">
-                        <span className="w-24 sm:w-32 shrink-0 text-xs font-bold text-slate-600 truncate">
+          {/* ------------------------------------------- results ticker */}
+          <motion.div
+            {...rise(0.5)}
+            className="mt-10 overflow-hidden border-y border-slate-200 bg-white/70 backdrop-blur-sm"
+          >
+            <div className="dz-marquee">
+              <div className="dz-marquee-track flex w-max items-stretch">
+                {[0, 1].map((pass) => (
+                  <div key={pass} className="flex items-stretch" aria-hidden={pass === 1 || undefined}>
+                    {RESULTS_BOARD.map((row) => (
+                      <div
+                        key={`${pass}-${row.label}`}
+                        className="flex shrink-0 items-center gap-3 border-r border-slate-200/80 px-5 py-3.5 sm:px-7"
+                      >
+                        <span className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
                           {row.label}
                         </span>
-                        <div className="flex-1 h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                          <motion.div
-                            className="h-full rounded-full bg-[#C61A1A]"
-                            initial={reduceMotion ? false : { width: 0 }}
-                            animate={{ width: `${(row.value / 4) * 100}%` }}
-                            transition={{
-                              duration: 0.9,
-                              delay: 0.35 + i * 0.09,
-                              ease: [0.22, 1, 0.36, 1],
-                            }}
-                          />
-                        </div>
-                        <span className="w-9 shrink-0 text-right text-xs font-extrabold text-slate-900 tabular-nums">
-                          {row.value}X
+                        <span className="text-sm font-extrabold tabular-nums text-[#C61A1A]">
+                          {row.value.toFixed(1)}X
+                        </span>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                          growth
                         </span>
                       </div>
                     ))}
                   </div>
-
-                  {/* footer strip */}
-                  <div className="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 bg-slate-50/60">
-                    <div className="py-3.5 px-2 text-center">
-                      <div className="text-lg sm:text-xl font-extrabold text-[#C61A1A] leading-none tabular-nums">
-                        <CountUp value="4X" />
-                      </div>
-                      <div className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                        Avg growth
-                      </div>
-                    </div>
-                    <div className="py-3.5 px-2 text-center">
-                      <div className="text-lg sm:text-xl font-extrabold text-slate-900 leading-none tabular-nums">
-                        <CountUp value="6" />
-                      </div>
-                      <div className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                        Projects ranked
-                      </div>
-                    </div>
-                    <div className="py-3.5 px-2 text-center">
-                      <div className="text-lg sm:text-xl font-extrabold text-slate-900 leading-none tabular-nums">
-                        100%
-                      </div>
-                      <div className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                        Measured
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ==================================================================
-          2. STATS RAIL — the four proof metrics
+          2. RESULTS LEDGER — animated proof dashboard
       =================================================================== */}
-      <section className="bg-white border-y border-slate-100 relative">
-        <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-[#C61A1A] to-transparent opacity-60" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-slate-100">
-            {PORTFOLIO_STATS.map((stat, i) => (
-              <Reveal key={stat.label} delay={i * 0.08} className="py-7 px-3 sm:px-5 text-center">
-                <span className="inline-block w-6 h-0.5 rounded-full bg-[#C61A1A] mb-3" />
-                <div
-                  className={`text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight tabular-nums ${
-                    stat.red ? 'text-[#C61A1A]' : 'text-slate-900'
-                  }`}
-                >
-                  <CountUp value={stat.value} />
-                </div>
-                <p className="mt-2 text-[11px] sm:text-xs text-slate-500 font-medium leading-snug max-w-[18rem] mx-auto">
-                  {stat.label}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ResultsLedger />
 
       {/* ==================================================================
-          3. SELECTED CLIENT WORK — Atlas + Northbridge previews
+          3. COVER WALL — every live file as a travelling cover wall
+      =================================================================== */}
+      <CoverWall />
+
+      {/* ==================================================================
+          3. SELECTED CLIENT WORK — Atlas + Northbridge spreads
       =================================================================== */}
       <section id="selected-work" className="py-14 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <Reveal>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-[#C61A1A] rounded-full text-xs font-semibold uppercase tracking-wider">
-                <TrendingUp className="w-3.5 h-3.5" /> Client Projects
-              </div>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Selected <span className="text-[#C61A1A]">Client Work</span>
-              </h2>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Reveal>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-[#C61A1A] rounded-full text-xs font-semibold uppercase tracking-wider">
+                  <TrendingUp className="w-3.5 h-3.5" /> Client Projects
+                </div>
+              </Reveal>
+              <Reveal delay={0.08}>
+                <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Selected <span className="text-[#C61A1A]">Client Work</span>
+                </h2>
+              </Reveal>
+            </div>
+            <Reveal delay={0.12}>
+              <p className="max-w-xs text-[12.5px] leading-relaxed text-slate-500 sm:text-right">
+                Two growth systems, rebuilt end-to-end. Every number below is measured, not estimated.
+              </p>
             </Reveal>
           </div>
 
-          <div className="mt-12 space-y-14">
+          <div className="mt-10 space-y-6 sm:space-y-8">
             {PORTFOLIO_PROJECTS.map((project, i) => (
-              <Reveal key={project.slug} delay={0.05} className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                {/* mockup (alternates sides) */}
-                <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
-                  <div className="rounded-2xl border border-slate-200 bg-white shadow-[0_20px_60px_-32px_rgba(15,23,42,0.25)] p-3 sm:p-4 hover:shadow-[0_28px_70px_-32px_rgba(15,23,42,0.32)] transition-shadow">
-                    <ProjectMockup
-                      variant={project.variant}
-                      metric={project.metric.value}
-                      url={
-                        project.variant === 'finance'
-                          ? 'atlasfinancial.com'
-                          : 'northbridgelegal.com'
-                      }
-                    />
-                  </div>
-                </div>
-
-                {/* copy */}
-                <div className={i % 2 === 1 ? 'lg:order-1 lg:pr-4' : 'lg:pl-4'}>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-bold uppercase tracking-widest text-slate-500">
-                    {project.industry}
-                  </span>
-                  <h3 className="mt-4 text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                    {project.name}
-                  </h3>
-                  <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">{project.description}</p>
-
-                  {/* headline result */}
-                  <div className="mt-5 inline-flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-100">
-                    <span className="text-2xl font-extrabold text-[#C61A1A] tabular-nums">{project.metric.value}</span>
-                    <span className="text-xs sm:text-sm font-semibold text-slate-700 leading-tight">
-                      {project.metric.label}
-                    </span>
-                  </div>
-
-                  <div className="mt-6">
-                    <a
-                      href={`/case-study/${project.slug}`}
-                      className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-800 hover:text-[#C61A1A] transition-colors group cursor-pointer"
-                    >
-                      View Case Study
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                  </div>
-                </div>
-              </Reveal>
+              <ProjectSpread key={project.slug} project={project} index={i} />
             ))}
           </div>
         </div>
       </section>
 
       {/* ==================================================================
-          4. FEATURED CASE STUDIES — full-detail previews → detail pages
+          4. THE VAULT — pinned horizontal case-file gallery
       =================================================================== */}
-      <section id="featured-cases" className="py-14 md:py-16 bg-slate-50 border-y border-slate-100 scroll-mt-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <Reveal>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-red-200 text-[#C61A1A] rounded-full text-xs font-semibold uppercase tracking-wider">
-                <Activity className="w-3.5 h-3.5" /> Featured Case Studies
-              </div>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Featured <span className="text-[#C61A1A]">Case Studies</span>
-              </h2>
-            </Reveal>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {CASE_STUDIES.map((study, i) => (
-              <Reveal key={study.id} delay={0.06 * i}>
-                <a
-                  href={`/case-study/${study.id}`}
-                  className="group block h-full bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-[#C61A1A]"
-                >
-                  {/* image + overlay */}
-                  <div className="relative h-52 sm:h-56 overflow-hidden bg-slate-100">
-                    <img
-                      src={study.image}
-                      alt={study.title}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/85 via-[#0A0A0A]/25 to-transparent" />
-                    <span className="absolute top-4 left-4 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white text-slate-900 shadow-xs">
-                      {study.industry}
-                    </span>
-                    <h3 className="absolute bottom-4 left-4 right-4 text-base sm:text-lg font-bold text-white leading-snug">
-                      {study.category}
-                    </h3>
-                  </div>
-
-                  {/* body */}
-                  <div className="p-5">
-                    <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">{study.summary}</p>
-
-                    {/* result chips */}
-                    <div className="mt-4 grid grid-cols-3 gap-2">
-                      {study.results.map((res) => (
-                        <div key={res.label} className="rounded-lg bg-slate-50 border border-slate-100 px-2 py-2 text-center">
-                          <div className="text-base sm:text-lg font-extrabold text-[#C61A1A] tabular-nums leading-none">
-                            {res.value}
-                          </div>
-                          <div className="mt-1 text-[9px] sm:text-[10px] text-slate-500 font-semibold leading-tight">
-                            {res.label}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-xs sm:text-sm font-bold text-slate-700 group-hover:text-[#C61A1A] transition-colors">
-                        View Case Study
-                      </span>
-                      <span className="p-1.5 rounded-full bg-slate-50 group-hover:bg-red-50 text-slate-400 group-hover:text-[#C61A1A] transition-all">
-                        <ArrowUpRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WorkVault />
 
       {/* ==================================================================
           5. HOW WE DRIVE GROWTH — interactive 5D pipeline
@@ -408,7 +384,7 @@ export const PortfolioPage: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAud
 
           {/* pipeline track */}
           <Reveal delay={0.1} className="mt-10">
-            <div className="rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_-32px_rgba(15,23,42,0.22)] overflow-hidden">
+            <div className="dz-spot relative rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_-32px_rgba(15,23,42,0.22)] overflow-hidden">
               <div className="flex items-center justify-between px-5 sm:px-6 pt-5">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#C61A1A] animate-pulse" />
@@ -603,16 +579,29 @@ export const PortfolioPage: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAud
                           <div className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
                             {group.phase}
                           </div>
-                          <ul className="mt-1.5 space-y-1.5">
+                          <motion.ul
+                            className="mt-1.5 space-y-1.5"
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, margin: '-40px' }}
+                            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
+                          >
                             {group.items.map((item) => (
-                              <li key={item} className="flex items-start gap-2 text-sm text-slate-700">
+                              <motion.li
+                                key={item}
+                                variants={{
+                                  hidden: { opacity: 0, x: -8 },
+                                  show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+                                }}
+                                className="flex items-start gap-2 text-sm text-slate-700"
+                              >
                                 <span className="p-0.5 rounded-full bg-red-100 text-[#C61A1A] mt-0.5 shrink-0">
                                   <Check className="w-3 h-3" />
                                 </span>
                                 <span>{item}</span>
-                              </li>
+                              </motion.li>
                             ))}
-                          </ul>
+                          </motion.ul>
                         </div>
                       </div>
                     </div>
@@ -631,6 +620,8 @@ export const PortfolioPage: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAud
           </div>
         </div>
       </section>
+
+      <VersusSection slug="portfolio" />
 
       {/* ==================================================================
           7. CLOSING CTA — red band

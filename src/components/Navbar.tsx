@@ -187,30 +187,48 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
       onMouseLeave={() => scheduleCloseNav()}
     >
       {/* Announcement bar */}
-      <div className="bg-black text-white text-xs sm:text-[13px] py-2 px-4 font-normal text-center flex flex-wrap items-center justify-center gap-2 tracking-tight">
-        <span className="bg-[#C61A1A] text-white px-3 py-0.5 rounded-full text-[11px] font-bold shadow-xs">
-          Limited Time Offer
-        </span>
-        <span className="text-slate-200">
-          Get Your Free AI-Powered Growth Audit & Discover How to 4X Your Revenue
-        </span>
+      <div className="bg-[#C61A1A] font-normal tracking-tight text-white">
+        {/* Phones: the entire bar is one comfortable tap target */}
         <button
           onClick={onOpenAudit}
-          className="inline-flex items-center gap-1 font-semibold text-white underline underline-offset-2 hover:text-red-300 transition-colors ml-1 cursor-pointer"
+          className="flex h-10 w-full items-center justify-center gap-2 px-3 text-[11.5px] font-medium text-slate-100 active:bg-[#9E1414] sm:hidden"
         >
-          <span>Get Started</span>
-          <ArrowRight className="w-3 h-3" />
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#C61A1A]" />
+          <span className="truncate">
+            Free AI Growth Audit <span className="font-bold text-white">· 4X revenue</span>
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-0.5 font-semibold text-white underline underline-offset-2">
+            Start
+            <ArrowRight className="h-3 w-3" />
+          </span>
         </button>
+
+        {/* Tablet and up: offer + full copy + inline link */}
+        <div className="mx-auto hidden max-w-7xl flex-wrap items-center justify-center gap-2 px-4 py-2 text-[13px] sm:flex">
+          <span className="inline-flex shrink-0 items-center rounded-full bg-white px-3 py-0.5 text-[11px] font-bold text-[#C61A1A] shadow-xs">
+            Limited Time Offer
+          </span>
+          <span className="text-white/90">
+            Get Your Free AI-Powered Growth Audit & Discover How to 4X Your Revenue
+          </span>
+          <button
+            onClick={onOpenAudit}
+            className="ml-1 inline-flex cursor-pointer items-center gap-1 font-semibold text-white underline underline-offset-2 transition-colors hover:text-red-100"
+          >
+            <span>Get Started</span>
+            <ArrowRight className="h-3 w-3" />
+          </button>
+        </div>
       </div>
 
       {/* Main navigation */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3 xl:gap-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8 xl:gap-6">
         <a
           href="/"
-          className="shrink-0 flex items-center py-2 transition-transform hover:scale-[1.02]"
+          className="flex shrink-0 items-center py-2 transition-transform hover:scale-[1.02]"
           onMouseEnter={closeNav}
         >
-          <Logo size="lg" />
+          <Logo size="lg" className="scale-[0.88] origin-left sm:scale-100" />
         </a>
 
         <nav className="hidden lg:flex items-center gap-2.5 xl:gap-7 text-sm xl:text-[15px] font-medium text-slate-800">
@@ -263,16 +281,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
           </button>
         </div>
 
-        <div className="flex lg:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-1.5">
           <button
             onClick={onOpenAudit}
-            className="sm:hidden px-3 py-1.5 text-xs font-semibold text-white bg-[#C61A1A] rounded-md"
+            className="sm:hidden inline-flex h-10 items-center rounded-lg bg-[#C61A1A] px-3.5 text-[12.5px] font-bold text-white shadow-sm active:scale-[0.98]"
           >
-            Audit
+            Free Audit
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-700 hover:text-slate-900 focus:outline-none cursor-pointer"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none cursor-pointer"
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
           >
@@ -449,7 +467,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="lg:hidden overflow-hidden border-t border-slate-100 bg-white"
           >
-            <div className="px-4 pt-3 pb-6 space-y-1">
+            <div className="max-h-[calc(100dvh-7rem)] space-y-1 overflow-y-auto overscroll-contain px-4 pb-6 pt-3">
               {NAV_LINKS.map((link, i) => {
                 const menu = DROPDOWN_FOR[link.href];
                 const expanded = menu !== undefined && mobileExpand === menu;
@@ -460,13 +478,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
                     initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.05 + i * 0.045, duration: 0.3 }}
-                    className="border-b border-slate-50"
+                    className="border-b border-slate-50 last:border-b-0"
                   >
                     <div className="flex items-center">
                       <a
                         href={link.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`flex-1 py-2.5 text-base font-medium transition-colors ${
+                        className={`flex-1 py-3 text-[15px] font-semibold transition-colors ${
                           activeHref === link.href ? 'text-[#C61A1A]' : 'text-slate-800 hover:text-[#C61A1A]'
                         }`}
                       >
@@ -477,7 +495,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
                           onClick={() => setMobileExpand(expanded ? null : menu)}
                           aria-label={`Toggle ${link.label} list`}
                           aria-expanded={expanded}
-                          className="-mr-2 p-2 text-slate-400 hover:text-[#C61A1A] cursor-pointer"
+                          className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-slate-400 hover:text-[#C61A1A] cursor-pointer"
                         >
                           <ChevronDown
                             className={`h-4 w-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
@@ -503,7 +521,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
                                   key={item.href}
                                   href={item.href}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-[13.5px] font-medium text-slate-700 transition-colors hover:bg-white hover:text-[#C61A1A]"
+                                  className="flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-white hover:text-[#C61A1A]"
                                 >
                                   {item.note && (
                                     <span className="shrink-0 text-[10px] font-extrabold tabular-nums text-slate-300">
@@ -529,13 +547,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAudit }) => {
                   </motion.div>
                 );
               })}
-              <div className="pt-3">
+              <div className="sticky bottom-0 -mx-4 mt-2 border-t border-slate-100 bg-white/95 px-4 pb-1 pt-3 backdrop-blur">
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     onOpenAudit();
                   }}
-                  className="w-full py-3 text-center text-sm font-semibold text-white bg-[#C61A1A] rounded-lg shadow-sm"
+                  className="dz-btn-shine w-full rounded-xl bg-[#C61A1A] py-3.5 text-center text-[15px] font-bold text-white shadow-[0_12px_26px_-14px_rgba(198,26,26,0.9)] active:scale-[0.99]"
                 >
                   Get Free Growth Audit
                 </button>

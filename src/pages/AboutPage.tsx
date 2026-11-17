@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { AboutHero } from './AboutHero';
 import { Reveal, StaggerItem, staggerContainer } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CountUp } from '../components/CountUp';
 import {
   ACHIEVEMENTS,
@@ -493,7 +494,62 @@ const PrinciplesDeck: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAudit }) 
 /* ==========================================================================
    3. 5D process in practice — alternating timeline
    ========================================================================== */
+/** One 5D step card — shared by the desktop timeline and the mobile stepper. */
+const ProcessStepCard: React.FC<{ step: (typeof PROCESS_STEPS)[number] }> = ({ step }) => (
+  <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_18px_50px_-35px_rgba(15,23,42,0.35)] transition-shadow hover:shadow-lg sm:p-7">
+    <span className="absolute top-0 left-0 h-1.5 w-full" style={{ background: step.color }} />
+    <div className="flex items-center gap-3">
+      <span
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold text-white shadow-sm sm:h-11 sm:w-11"
+        style={{ background: step.color }}
+      >
+        {step.num}
+      </span>
+      <div className="min-w-0">
+        <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: step.color }}>
+          {step.name}
+        </div>
+        <h3 className="text-[15px] font-extrabold leading-tight text-slate-900 sm:text-lg">{step.title}</h3>
+      </div>
+    </div>
+
+    <p className="mt-3.5 text-[13.5px] leading-relaxed text-slate-600 sm:mt-4 sm:text-sm">{step.body}</p>
+
+    {/* Deliverables / channels */}
+    {step.items && step.items.length > 0 && (
+      <div className="mt-4">
+        {step.listLabel && (
+          <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            {step.listLabel}
+          </div>
+        )}
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+          {step.items.map((item) => (
+            <span
+              key={item}
+              className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[11.5px] font-semibold sm:px-3 sm:text-xs"
+              style={{ backgroundColor: step.tint, borderColor: `${step.color}33`, color: step.color }}
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {step.closing && (
+      <p className="mt-4 border-t border-dashed border-slate-200 pt-4 text-[13px] font-bold text-slate-800 sm:text-sm">
+        {step.closing}
+      </p>
+    )}
+  </div>
+);
+
 const ProcessTimeline: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAudit }) => {
+  const [activeStep, setActiveStep] = useState(0);
+  const step = PROCESS_STEPS[activeStep];
+
   return (
     <section id="process" className="py-14 md:py-16 bg-slate-50/60 border-t border-slate-100 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -508,7 +564,66 @@ const ProcessTimeline: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAudit })
           lead="The 5D Growth Framework isn’t theory. Here’s the exact process we follow for every client — how we build predictable growth for real businesses."
         />
 
-        <div className="mt-16 relative">
+        {/* Phones: one step at a time — a five-chip rail above the active card */}
+        <div className="mt-8 md:hidden">
+          <div
+            className="dz-mobile-rail pb-1"
+            role="tablist"
+            aria-label="The five steps of the 5D Growth Framework"
+          >
+            {PROCESS_STEPS.map((s, i) => {
+              const isActive = i === activeStep;
+              return (
+                <button
+                  key={s.num}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveStep(i)}
+                  className={`rail-chip inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-[12.5px] font-bold transition-colors ${
+                    isActive
+                      ? 'border-transparent text-white shadow-sm'
+                      : 'border-slate-200 bg-white text-slate-600'
+                  }`}
+                  style={isActive ? { backgroundColor: s.color } : undefined}
+                >
+                  <span className={isActive ? 'text-white/70' : 'text-slate-400'}>{s.num}</span>
+                  {s.name}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 flex items-center justify-between text-[10.5px] font-bold uppercase tracking-[0.14em] text-slate-400">
+            <span>
+              Step {step.num} of {String(PROCESS_STEPS.length).padStart(2, '0')}
+            </span>
+            <span className="text-slate-300">Tap a step to switch</span>
+          </div>
+
+          <div className="mt-2 h-0.5 w-full overflow-hidden rounded-full bg-slate-200">
+            <motion.div
+              className="h-full origin-left rounded-full bg-[#C61A1A]"
+              animate={{ scaleX: (activeStep + 1) / PROCESS_STEPS.length }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </div>
+
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={activeStep}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-4"
+            >
+              <ProcessStepCard step={step} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="mt-16 relative hidden md:block">
           {/* Desktop spine */}
           <div className="hidden md:block absolute left-1/2 top-2 bottom-2 w-0.5 -translate-x-1/2 bg-slate-200 rounded-full" />
           <div className="hidden md:block absolute left-1/2 top-2 bottom-2 w-0.5 -translate-x-1/2 overflow-hidden rounded-full">
@@ -532,54 +647,7 @@ const ProcessTimeline: React.FC<{ onOpenAudit: () => void }> = ({ onOpenAudit })
                   {/* Card */}
                   <div className={`${isLeft ? 'md:col-start-1' : 'md:col-start-3'} pl-14 md:pl-0`}>
                     <Reveal direction={isLeft ? 'left' : 'right'}>
-                      <div className="rounded-3xl bg-white border border-slate-200 shadow-[0_18px_50px_-35px_rgba(15,23,42,0.35)] p-6 sm:p-7 relative overflow-hidden hover:shadow-lg transition-shadow">
-                        <span className="absolute top-0 left-0 h-1.5 w-full" style={{ background: step.color }} />
-                        <div className="flex items-center gap-3">
-                          <span
-                            className="w-11 h-11 rounded-2xl flex items-center justify-center text-white text-sm font-extrabold shadow-sm"
-                            style={{ background: step.color }}
-                          >
-                            {step.num}
-                          </span>
-                          <div>
-                            <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: step.color }}>
-                              {step.name}
-                            </div>
-                            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">{step.title}</h3>
-                          </div>
-                        </div>
-
-                        <p className="mt-4 text-sm text-slate-600 leading-relaxed">{step.body}</p>
-
-                        {/* Deliverables / channels */}
-                        {step.items && step.items.length > 0 && (
-                          <div className="mt-4">
-                            {step.listLabel && (
-                              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
-                                {step.listLabel}
-                              </div>
-                            )}
-                            <div className="flex flex-wrap gap-2">
-                              {step.items.map((item) => (
-                                <span
-                                  key={item}
-                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border"
-                                  style={{ backgroundColor: step.tint, borderColor: `${step.color}33`, color: step.color }}
-                                >
-                                  <CheckCircle2 className="w-3.5 h-3.5" />
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {step.closing && (
-                          <p className="mt-4 pt-4 border-t border-dashed border-slate-200 text-sm font-bold text-slate-800">
-                            {step.closing}
-                          </p>
-                        )}
-                      </div>
+                      <ProcessStepCard step={step} />
                     </Reveal>
                   </div>
 
@@ -1176,6 +1244,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenAudit }) => {
       <AIPlusHuman />
       <TeamSection />
       <IdealClients onOpenAudit={onOpenAudit} />
+      <VersusSection slug="about" />
       <Achievements />
       <AboutCta onOpenAudit={onOpenAudit} />
     </>

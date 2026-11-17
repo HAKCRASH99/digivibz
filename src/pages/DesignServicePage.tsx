@@ -22,6 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
+import { VersusSection } from '../components/versus/VersusSection';
 import { CTAArrow } from '../components/social/SocialVisuals';
 import {
   DesignCanvas,
@@ -296,7 +297,7 @@ const WhySection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {GD_WHY.features.map((f, i) => {
           const Icon = WHY_ICONS[i];
           return (
@@ -349,7 +350,7 @@ const ServicesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="mt-12 grid sm:grid-cols-2 gap-4">
+      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 gap-4">
         {GD_SERVICES.items.map((item, i) => {
           const Icon = SERVICE_ICONS[i];
           return (
@@ -647,6 +648,7 @@ export const DesignServicePage: React.FC<DesignServicePageProps> = ({ onOpenAudi
   <main className="bg-white">
     <HeroSection onOpenAudit={onOpenAudit} />
     <ProblemSection />
+    <VersusSection slug="graphic-designing" />
     <WhySection />
     <ServicesSection />
     <ProcessSection />

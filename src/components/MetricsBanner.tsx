@@ -33,10 +33,10 @@ export const MetricsBanner: React.FC = () => {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="mt-9 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-8 lg:grid-cols-4">
           {METRICS.map((item, idx) => (
             <Reveal key={idx} delay={idx * 0.09}>
-              <div className="p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-red-200 hover:bg-white hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center h-full">
+              <div className="flex h-full flex-col justify-center rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:border-red-200 hover:bg-white hover:shadow-md sm:p-6">
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#C61A1A] tracking-tight tabular-nums">
                   <CountUp value={item.value} />
                 </div>
@@ -48,7 +48,7 @@ export const MetricsBanner: React.FC = () => {
           ))}
         </div>
 
-        <Reveal delay={0.1} className="mt-16 pt-8 border-t border-slate-100">
+        <Reveal delay={0.1} className="mt-10 border-t border-slate-100 pt-6 sm:mt-16 sm:pt-8">
           <p className="text-xs sm:text-sm text-slate-500 italic max-w-md mx-auto">
             You probably still have questions. Good, here are the ones we hear most.
           </p>

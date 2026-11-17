@@ -40,7 +40,16 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onOpenAudit, onSelectC
         </div>
 
         {/* Carousel (slides in the direction of navigation) */}
-        <div className="mt-14 overflow-hidden">
+        <motion.div
+          className="mt-10 overflow-hidden sm:mt-14"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.14}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -48) go(1);
+            else if (info.offset.x > 48) go(-1);
+          }}
+        >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={startIndex}
@@ -48,9 +57,9 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onOpenAudit, onSelectC
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: direction * -56 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
             >
-              {visibleStudies.map((study) => (
+              {visibleStudies.map((study, idx) => (
                 <div
                   key={study.id}
                   tabIndex={0}
@@ -62,9 +71,9 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onOpenAudit, onSelectC
                       onSelectCaseStudy(study);
                     }
                   }}
-                  className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#C61A1A]"
+                  className={`${idx > 0 ? 'hidden md:flex' : 'flex'} flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#C61A1A]`}
                 >
-                  <div className="relative h-60 w-full overflow-hidden bg-slate-100">
+                  <div className="relative h-52 w-full overflow-hidden bg-slate-100 sm:h-60">
                     <img
                       src={study.image}
                       alt={study.title}
@@ -98,19 +107,26 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onOpenAudit, onSelectC
               ))}
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* Controls + position dots */}
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="mt-6 flex items-center justify-center gap-4 sm:mt-8">
           <button
             onClick={() => go(-1)}
-            className="w-9 h-9 rounded-full bg-black text-white hover:bg-[#27272A] hover:scale-105 flex items-center justify-center transition-all cursor-pointer shadow-xs"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-xs transition-all hover:scale-105 hover:bg-[#27272A] active:scale-95 cursor-pointer sm:h-9 sm:w-9"
             aria-label="Previous case study"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="h-4 w-4" />
           </button>
 
-          <div className="flex items-center gap-2">
+          {/* Phones get a compact counter instead of ten 8px dots */}
+          <span className="min-w-[64px] text-center font-mono text-[12px] font-bold tabular-nums text-slate-500 sm:hidden">
+            <span className="text-[#C61A1A]">{String(startIndex + 1).padStart(2, '0')}</span>
+            <span className="mx-0.5 text-slate-300">/</span>
+            {String(CASE_STUDIES.length).padStart(2, '0')}
+          </span>
+
+          <div className="hidden items-center gap-2 sm:flex">
             {CASE_STUDIES.map((study, i) => (
               <button
                 key={study.id}
@@ -128,19 +144,19 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onOpenAudit, onSelectC
 
           <button
             onClick={() => go(1)}
-            className="w-9 h-9 rounded-full bg-black text-white hover:bg-[#27272A] hover:scale-105 flex items-center justify-center transition-all cursor-pointer shadow-xs"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white shadow-xs transition-all hover:scale-105 hover:bg-[#27272A] active:scale-95 cursor-pointer sm:h-9 sm:w-9"
             aria-label="Next case study"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
         {/* CTA */}
-        <div className="mt-12 text-center space-y-4">
+        <div className="mt-10 space-y-4 text-center sm:mt-12">
           <Reveal>
             <button
               onClick={onOpenAudit}
-              className="dz-btn-shine inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#C61A1A] hover:bg-[#9E1414] text-white font-semibold text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group"
+              className="dz-btn-shine inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#C61A1A] px-5 py-3.5 text-[13.5px] font-semibold leading-snug text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#9E1414] hover:shadow-lg sm:w-auto sm:rounded-lg sm:px-8 sm:text-base cursor-pointer group"
             >
               <span>Apply The 5D Growth System To My Business</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

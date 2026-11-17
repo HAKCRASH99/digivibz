@@ -110,7 +110,7 @@ export const WhyMarketingFails: React.FC<WhyMarketingFailsProps> = ({ onOpenAudi
           <Reveal delay={0.08}>
             <button
               onClick={onOpenAudit}
-              className="dz-btn-shine inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#C61A1A] hover:bg-[#9E1414] text-white font-semibold text-sm sm:text-base rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer group"
+              className="dz-btn-shine inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#C61A1A] px-6 py-3.5 text-[13.5px] font-semibold leading-snug text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#9E1414] hover:shadow-lg sm:w-auto sm:px-8 sm:text-base cursor-pointer group"
             >
               <span>Show Me Growth Opportunities</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
