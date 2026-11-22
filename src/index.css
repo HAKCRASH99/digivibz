@@ -392,6 +392,15 @@ html {
   }
 }
 
+/* Scrolling chip rows that stay inside their card (tabs, filters). */
+.dz-chip-scroll {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.dz-chip-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Edge-to-edge, snap-scrolling rails used for card strips on phones. */
 .dz-rail {
   display: flex;

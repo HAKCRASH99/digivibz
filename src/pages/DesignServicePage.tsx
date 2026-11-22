@@ -32,6 +32,7 @@ import {
   StatStrip,
   ToolGrid,
 } from '../components/design/DesignVisuals';
+import { DesignSpecimenBoard } from '../components/services/ServiceShowcases';
 import {
   GD_CTA,
   GD_DIFF,
@@ -350,28 +351,14 @@ const ServicesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 gap-4">
-        {GD_SERVICES.items.map((item, i) => {
-          const Icon = SERVICE_ICONS[i];
-          return (
-            <Reveal key={item.title} delay={Math.min(i * 0.04, 0.28)}>
-              <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-100 bg-red-50 text-[#C61A1A] transition-colors group-hover:bg-[#C61A1A] group-hover:border-[#C61A1A] group-hover:text-white">
-                    <Icon className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-extrabold tracking-widest text-slate-400">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="mt-3.5 text-base sm:text-lg font-extrabold text-slate-900 leading-snug">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{item.body}</p>
-              </div>
-            </Reveal>
-          );
-        })}
+      <div className="mt-12">
+        <DesignSpecimenBoard
+          items={GD_SERVICES.items}
+          renderIcon={(i) => {
+            const Icon = SERVICE_ICONS[i];
+            return <Icon className="h-4.5 w-4.5" />;
+          }}
+        />
       </div>
     </div>
   </section>

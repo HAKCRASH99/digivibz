@@ -10,10 +10,10 @@ import {
   BudgetLeak,
   DialPanel,
   FlipRows,
-  GA_GROUP_ICONS,
   GrowthStairs,
   VitalsMonitor,
 } from '../components/googleads/GoogleAdsVisuals';
+import { GaCampaignBoard } from '../components/services/ServiceShowcases';
 import {
   GA_CTA,
   GA_FAQ,
@@ -319,54 +319,8 @@ const ServicesSection: React.FC = () => (
           </Reveal>
         </div>
 
-        <div className="mt-12 space-y-12">
-          {GA_SERVICES.groups.map((group, gi) => {
-            const Icon = GA_GROUP_ICONS[gi];
-            return (
-              <div key={group.key}>
-                <Reveal>
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-100 bg-red-50 text-[#C61A1A]">
-                      <Icon className="w-4.5 h-4.5" />
-                    </span>
-                    <h3 className="text-base font-extrabold text-slate-900 sm:text-lg">
-                      {group.key}
-                    </h3>
-                    <span className="hidden font-mono text-[10px] font-extrabold text-slate-400 sm:inline">
-                      {String(group.items.length).padStart(2, '0')} SERVICES
-                    </span>
-                    <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
-                  </div>
-                </Reveal>
-
-                {group.desc && (
-                  <Reveal delay={0.04}>
-                    <p className="mt-3 max-w-3xl text-[13.5px] text-slate-600 leading-relaxed">
-                      {group.desc}
-                    </p>
-                  </Reveal>
-                )}
-
-                <div className="dz-mobile-rail mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {group.items.map((item, i) => (
-                    <Reveal key={item.title} delay={Math.min(i * 0.04, 0.24)}>
-                      <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
-                        <div className="flex items-start gap-2.5">
-                          <span className="mt-1 h-4 w-0.5 shrink-0 rounded-full bg-[#C61A1A]" />
-                          <h4 className="text-sm font-extrabold text-slate-900 leading-snug">
-                            {item.title}
-                          </h4>
-                        </div>
-                        <p className="mt-2 pl-3 text-[13px] text-slate-600 leading-relaxed">
-                          {item.body}
-                        </p>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+        <div className="mt-10">
+          <GaCampaignBoard groups={GA_SERVICES.groups} />
         </div>
 
         <Reveal delay={0.08}>

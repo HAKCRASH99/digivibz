@@ -2,19 +2,12 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   ArrowRight,
-  BadgeCheck,
   Crosshair,
   Eye,
   HeartHandshake,
   HelpCircle,
-  Link,
-  MapPin,
   Minus,
   Plus,
-  SearchCheck,
-  ShieldAlert,
-  SlidersHorizontal,
-  Star,
   TrendingUp,
   X,
 } from 'lucide-react';
@@ -28,6 +21,7 @@ import {
   SearchRun,
   StatStrip,
 } from '../components/gmb/GmbVisuals';
+import { GmbAuditSheet } from '../components/services/ServiceShowcases';
 import {
   GMB_CTA,
   GMB_DIFF,
@@ -49,7 +43,6 @@ const scrollToSection = (id: string) => {
 };
 
 /** One icon per GMB service, in copy order. */
-const SERVICE_ICONS = [SearchCheck, BadgeCheck, SlidersHorizontal, MapPin, Link, Star, ShieldAlert];
 const WHY_ICONS = [Crosshair, Eye, TrendingUp, HeartHandshake];
 
 /* ------------------------------------------------------------------
@@ -316,28 +309,8 @@ const ServicesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {GMB_SERVICES.items.map((item, i) => {
-          const Icon = SERVICE_ICONS[i];
-          return (
-            <Reveal key={item.title} delay={Math.min(i * 0.05, 0.3)}>
-              <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-100 bg-red-50 text-[#C61A1A] transition-colors group-hover:bg-[#C61A1A] group-hover:border-[#C61A1A] group-hover:text-white">
-                    <Icon className="w-5 h-5" />
-                  </span>
-                  <span className="text-xs font-extrabold tracking-widest text-slate-400">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="mt-3.5 text-base font-extrabold text-slate-900 leading-snug">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{item.body}</p>
-              </div>
-            </Reveal>
-          );
-        })}
+      <div className="mt-12">
+        <GmbAuditSheet items={GMB_SERVICES.items} />
       </div>
     </div>
   </section>

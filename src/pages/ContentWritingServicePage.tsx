@@ -3,22 +3,11 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   ArrowRight,
   BarChart3,
-  Briefcase,
   CircleX,
-  Clapperboard,
-  Cpu,
-  Feather,
-  Globe,
   HelpCircle,
-  Mail,
   Minus,
-  MousePointerClick,
-  Newspaper,
   Plus,
   RefreshCw,
-  Search,
-  Share2,
-  ShoppingCart,
   Users,
 } from 'lucide-react';
 import { Reveal } from '../components/Reveal';
@@ -31,6 +20,7 @@ import {
   StatLedger,
   WriterVenn,
 } from '../components/contentwriting/ContentWritingVisuals';
+import { CwManuscript } from '../components/services/ServiceShowcases';
 import {
   CW_CTA,
   CW_FAQ,
@@ -50,21 +40,6 @@ interface ContentWritingServicePageProps {
 const scrollToSection = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
-
-/** One icon per content format — the 11-type ledger. */
-const TYPE_ICONS = [
-  Newspaper, // Blog & Article
-  Globe, // Website
-  ShoppingCart, // Product & E-commerce
-  MousePointerClick, // Copywriting
-  Mail, // Email
-  Share2, // Social
-  Search, // SEO
-  Briefcase, // B2B
-  Cpu, // Technical
-  Clapperboard, // Script
-  Feather, // Ghostwriting
-];
 
 /* ------------------------------------------------------------------
    Hero — paper-white stage, copy left / pen writing in book right.
@@ -329,23 +304,8 @@ const TypesSection: React.FC = () => (
         </Reveal>
       </div>
 
-      <div className="dz-mobile-rail mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {CW_TYPES.items.map((item, i) => {
-          const Icon = TYPE_ICONS[i];
-          return (
-            <Reveal key={item.title} delay={Math.min(i * 0.05, 0.3)}>
-              <div className="group h-full rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-300 hover:shadow-[0_24px_50px_-38px_rgba(198,26,26,0.5)]">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-100 bg-red-50 text-[#C61A1A] transition-colors group-hover:bg-[#C61A1A] group-hover:border-[#C61A1A] group-hover:text-white">
-                  <Icon className="w-5 h-5" />
-                </span>
-                <h3 className="mt-3.5 text-base font-extrabold text-slate-900 leading-snug">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{item.body}</p>
-              </div>
-            </Reveal>
-          );
-        })}
+      <div className="mt-12">
+        <CwManuscript items={CW_TYPES.items} />
       </div>
 
       <Reveal delay={0.1}>
